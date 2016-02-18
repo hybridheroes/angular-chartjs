@@ -1,6 +1,6 @@
 (function () {
   'use strict';
-  
+
   var chartjs = angular.module('chartjs', []),
     chartTypes = {
       line: 'Line',
@@ -8,7 +8,8 @@
       radar: 'Radar',
       polar: 'PolarArea',
       pie: 'Pie',
-      doughnut: 'Doughnut'
+      doughnut: 'Doughnut',
+      scatter: 'Scatter'
     },
     makeChartDirective = function (chartType) {
       var upper = chartType.charAt(0).toUpperCase() + chartType.slice(1);
@@ -54,20 +55,20 @@
           var chartOpts = {};
 
           angular.extend(
-            chartOpts, 
+            chartOpts,
             Chart.defaults.global,
             Chart.defaults[chartType]
           );
 
           angular.extend(
-            chartOpts, 
+            chartOpts,
             scope.options,
             extractSpecOpts(
               chartOpts,
               attrs
             )
           );
-      
+
           var canvas = document.createElement('canvas');
           element.prepend(canvas);
           if (typeof(G_vmlCanvasManager) != 'undefined') canvas = G_vmlCanvasManager.initElement(canvas);
@@ -81,15 +82,16 @@
 
           scope.$watch('dataset', function (newData, oldData) {
             chart.initialize(newData);
+            element[0].children[1].innerHTML = chart.generateLegend();
           }, true);
 
           scope.$watch('options', function (newData, oldData) {
             angular.extend(
-              chart.options, 
+              chart.options,
               scope.options
             );
           }, true);
-          
+
         }
       };
     };
